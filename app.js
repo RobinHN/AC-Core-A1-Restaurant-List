@@ -26,16 +26,22 @@ db.once('open', () => {
 
 // 載入 restaurantlist model
 const Restaurant = require('./models/restaurant')
+const restaurant = require('./models/restaurant')
 
 // set up routes
 // restaurant homepage
 app.get('/', (req, res) => {
-  return res.render('index')
+  Restaurant.find()
+    .lean()
+    .exec((err, restaurants) => { // get all data from Restaurant model
+      if (err) return console.error(err)
+      return res.render('index', { restaurants: restaurants }) // send data to index template
+    })
 })
 
 // list all restaurant
 app.get('/restaurants', (req, res) => {
-  res.send('list all restaurants')
+  return res.redirect('/')
 })
 // create a restaurant page
 app.get('/restaurants/new', (req, res) => {
