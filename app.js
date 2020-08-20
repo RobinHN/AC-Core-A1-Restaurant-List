@@ -20,8 +20,40 @@ db.once('open', () => {
 // 載入 restaurantlist model
 const Restaurant = require('./models/restaurant')
 
+// set up routes
+// restaurant homepage
 app.get('/', (req, res) => {
   res.send('restaurant in your pocket')
+})
+
+// list all restaurant
+app.get('/restaurants', (req, res) => {
+  res.send('list all restaurants')
+})
+// create a restaurant page
+app.get('/restaurants/new', (req, res) => {
+  res.send('create a restaurant page')
+})
+// get detail of a restaurant
+app.get('/restaurants/:id', (req, res) => {
+  res.send('get detail of a restaurant')
+})
+// create a restaurant
+app.post('/restaurants', (req, res) => {
+  res.send('create a restaurant')
+})
+// edit restaurant page
+app.post('/restaurants/:id/edit', (req, res) => {
+  res.send('edit a restaurant page')
+})
+// edit restaurant
+app.post('/restaurants/:id/edit', (req, res) => {
+  res.send('edit a restaurant')
+})
+// delete restaurant
+// edit restaurant page
+app.post('/restaurants/:id/delete', (req, res) => {
+  res.send('delete a restaurant')
 })
 
 app.listen(3000, () => {
