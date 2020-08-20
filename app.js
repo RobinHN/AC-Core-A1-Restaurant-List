@@ -9,6 +9,11 @@ const exphbs = require('express-handlebars')
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
+// require body-parser
+const bodyParser = require('body-parser')
+// setting bodyParser
+app.use(bodyParser.urlencoded({ extended: true }));
+
 mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })  // 設定連線到 mongoDB
 
 // mongoose 連線後透過 mongoose.connection 拿到 Connection 的物件
@@ -45,7 +50,7 @@ app.get('/restaurants', (req, res) => {
 })
 // create a restaurant page
 app.get('/restaurants/new', (req, res) => {
-  res.send('create a restaurant page')
+  return res.render('new')
 })
 // get detail of a restaurant
 app.get('/restaurants/:id', (req, res) => {
@@ -53,7 +58,15 @@ app.get('/restaurants/:id', (req, res) => {
 })
 // create a restaurant
 app.post('/restaurants', (req, res) => {
-  res.send('create a restaurant')
+  // 建立 Restaurant model 實例
+  const restaurant = new Restaurant({
+    name: req.body.name,    // name come from new page
+  })
+  // store in database
+  restaurant.save(err => {
+    if (err) return console.error(err)
+    return res.redirect('/')  // create done, redirect to homepage
+  })
 })
 // edit restaurant page
 app.post('/restaurants/:id/edit', (req, res) => {
