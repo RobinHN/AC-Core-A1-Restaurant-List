@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')               // 載入mongoose
 
-mongoose.connect('mongodb://localhost/restaurantlist', { useNewUrlParser: true, useUnifiedTopology: true })  // 設定連線到 mongoDB
+mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })  // 設定連線到 mongoDB
 
 // mongoose 連線後透過 mongoose.connection 拿到 Connection 的物件
 const db = mongoose.connection
@@ -18,7 +18,7 @@ db.once('open', () => {
 })
 
 // 載入 restaurantlist model
-const Restaurantlist = require('./models/restaurantlist')
+const Restaurant = require('./models/restaurant')
 
 app.get('/', (req, res) => {
   res.send('restaurant in your pocket')
