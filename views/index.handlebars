@@ -1,13 +1,13 @@
 <!-- ./views/index.handlebars -->
 
 <!-- search bar -->
-<a href="/restaurants/new">Create</a>
+<!--<a href="/restaurants/new">Create</a>-->
 <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
       <form action="/search">
-        <h4 class="mb-2">尋找餐廳:</h4>
-        <div class="input-group">
+        <!--<h4 class="mb-2">尋找餐廳:</h4>-->
+        <div class="input-group mt-3">
           <input type="text" name="keyword" class="form-control" placeholder="輸入餐廳、類別" aria-label="Restaurant Name..."
             value="{{keyword}}" aria-describedby="search-button">
           <div class="input-group-append">
@@ -39,17 +39,17 @@
                 {{this.rating}}
                 <i class="fas fa-star fa-xs"></i>
               </span>
-
+              <div class="row flex-nowrap justify-content-end align-content-center mr-auto">
+                <a class="mr-1" href="/restaurants/{{{this._id}}}/edit">Edit</a>
+                <a class="mr-1" href="/restaurants/{{{this._id}}}">Detail</a>
+                <form action="/restaurants/{{{this._id}}}/delete?_method=DELETE" method="POST" style="display: inline;">
+                  <button type="submit" type="button" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
             </div>
           </div>
         </a>
-        <li>
-          <a href="/restaurants/{{{this._id}}}">detail</a>
-          <a href="/restaurants/{{{this._id}}}/edit">edit</a>
-          <form action="/restaurants/{{{this._id}}}/delete" method="POST" style="display: inline;">
-            <button type="submit">delete</button>
-          </form>
-        </li>
+
         {{/each}}
       </div>
     </div>

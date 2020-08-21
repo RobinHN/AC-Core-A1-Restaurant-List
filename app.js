@@ -11,8 +11,15 @@ app.set('view engine', 'handlebars')
 
 // require body-parser
 const bodyParser = require('body-parser')
+
+// require method-override
+const methodOverride = require('method-override')
+
 // setting bodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// setting method-override
+app.use(methodOverride('_method'))
 
 mongoose.connect('mongodb://localhost/restaurant', { useNewUrlParser: true, useUnifiedTopology: true })  // 設定連線到 mongoDB
 
@@ -74,7 +81,7 @@ app.post('/restaurants', (req, res) => {
   })
 })
 // edit restaurant page
-app.post('/restaurants/:id/edit', (req, res) => {
+app.get('/restaurants/:id/edit', (req, res) => {
   Restaurant.findById(req.params.id)
     .lean()
     .exec((err, restaurant) => {
@@ -83,18 +90,18 @@ app.post('/restaurants/:id/edit', (req, res) => {
     })
 })
 // edit restaurant
-app.post('/restaurants/:id/edit', (req, res) => {
+app.put('/restaurants/:id', (req, res) => {
   Restaurant.findById(req.params.id, (err, restaurant) => {
     if (err) return console.error(err)
-    restaurant.name = req.body.name
-    restaurant.name_en = req.body.name_en
-    restaurant.category = req.body.category
-    restaurant.image = req.body.image
-    restaurant.location = req.body.location
-    restaurant.phone = req.body.phone
-    restaurant.google_map = req.body.google_map
-    restaurant.rating = req.body.rating
-    restaurant.description = req.body.description
+      restaurant.name = req.body.name
+      restaurant.name_en = req.body.name_en
+      restaurant.category = req.body.category
+      restaurant.image = req.body.image
+      restaurant.location = req.body.location
+      restaurant.phone = req.body.phone
+      restaurant.google_map = req.body.google_map
+      restaurant.rating = req.body.rating
+      restaurant.description = req.body.description
     restaurant.save(err => {
       if (err) return console.error(err)
       return res.redirect(`/restaurants/${req.params.id}`)
@@ -102,8 +109,7 @@ app.post('/restaurants/:id/edit', (req, res) => {
   })
 })
 // delete restaurant
-// edit restaurant page
-app.post('/restaurants/:id/delete', (req, res) => {
+app.delete('/restaurants/:id/delete', (req, res) => {
   Restaurant.findById(req.params.id, (err, restaurant) => {
     if (err) return console.error(err)
     restaurant.remove(err => {
@@ -116,46 +122,3 @@ app.post('/restaurants/:id/delete', (req, res) => {
 app.listen(3000, () => {
   console.log('App is running!')
 })
-
-
-// require packages used in the project
-/*const express = require('express')
-const app = express()
-const port = 3000
-
-// require express-handlebars here
-const exphbs = require('express-handlebars')
-const restaurantList = require('./restaurants.json')
-
-// setting template engine
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-app.set('view engine', 'handlebars')
-
-// setting static files
-app.use(express.static('public'))
-
-// route setting
-app.get('/', (req, res) => {
-  // past the restaurant data into 'index' partial template
-  res.render('index', { restaurants: restaurantList.results })
-})
-
-app.get('/restaurants/:restaurant_id', (req, res) => {
-
-  const restaurant = restaurantList.results.find(restaurant => restaurant.id.toString() === req.params.restaurant_id)
-  res.render('show', { restaurant: restaurant })
-})
-
-app.get('/search', (req, res) => {
-  const keyword = req.query.keyword
-  const restaurants = restaurantList.results.filter(restaurant => {
-    return restaurant.name.toLowerCase().includes(keyword.toLowerCase()) || restaurant.category.toLowerCase().includes(keyword.toLowerCase())
-  })
-  res.render('index', { restaurants: restaurants, keyword: keyword })
-})
-
-
-// start and listen on the Express server
-app.listen(port, () => {
-  console.log(`Express is listening on localhost:${port}`)
-})*/
