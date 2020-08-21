@@ -40,84 +40,9 @@ db.once('open', () => {
 const Restaurant = require('./models/restaurant')
 const restaurant = require('./models/restaurant')
 
-// set up routes
-// restaurant homepage
-app.get('/', (req, res) => {
-  Restaurant.find()
-    .lean()
-    .exec((err, restaurants) => { // get all data from Restaurant model
-      if (err) return console.error(err)
-      return res.render('index', { restaurants: restaurants }) // send data to index template
-    })
-})
-
-// list all restaurant
-app.get('/restaurants', (req, res) => {
-  return res.redirect('/')
-})
-// create a restaurant page
-app.get('/restaurants/new', (req, res) => {
-  return res.render('new')
-})
-// get detail of a restaurant
-app.get('/restaurants/:id', (req, res) => {
-  Restaurant.findById(req.params.id)
-    .lean()
-    .exec((err, restaurant) => {
-      if (err) return console.error(err)
-      return res.render('show', { restaurant: restaurant })
-    })
-})
-// create a restaurant
-app.post('/restaurants', (req, res) => {
-  // 建立 Restaurant model 實例
-  const restaurant = new Restaurant({
-    name: req.body.name,    // name come from new page
-  })
-  // store in database
-  restaurant.save(err => {
-    if (err) return console.error(err)
-    return res.redirect('/')  // create done, redirect to homepage
-  })
-})
-// edit restaurant page
-app.get('/restaurants/:id/edit', (req, res) => {
-  Restaurant.findById(req.params.id)
-    .lean()
-    .exec((err, restaurant) => {
-      if (err) return console.error(err)
-      return res.render('edit', { restaurant: restaurant })
-    })
-})
-// edit restaurant
-app.put('/restaurants/:id', (req, res) => {
-  Restaurant.findById(req.params.id, (err, restaurant) => {
-    if (err) return console.error(err)
-      restaurant.name = req.body.name
-      restaurant.name_en = req.body.name_en
-      restaurant.category = req.body.category
-      restaurant.image = req.body.image
-      restaurant.location = req.body.location
-      restaurant.phone = req.body.phone
-      restaurant.google_map = req.body.google_map
-      restaurant.rating = req.body.rating
-      restaurant.description = req.body.description
-    restaurant.save(err => {
-      if (err) return console.error(err)
-      return res.redirect(`/restaurants/${req.params.id}`)
-    })
-  })
-})
-// delete restaurant
-app.delete('/restaurants/:id/delete', (req, res) => {
-  Restaurant.findById(req.params.id, (err, restaurant) => {
-    if (err) return console.error(err)
-    restaurant.remove(err => {
-      if (err) return console.error(err)
-      return res.redirect('/')
-    })
-  })
-})
+// require routes
+app.use('/', require('./routes/home'))
+app.use('/restaurants', require('./routes/restaurant'))
 
 app.listen(3000, () => {
   console.log('App is running!')
