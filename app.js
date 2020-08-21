@@ -58,7 +58,7 @@ app.get('/restaurants/:id', (req, res) => {
     .lean()
     .exec((err, restaurant) => {
       if (err) return console.error(err)
-      return res.render('show', { restaurant: restaurant})
+      return res.render('show', { restaurant: restaurant })
     })
 })
 // create a restaurant
@@ -75,11 +75,31 @@ app.post('/restaurants', (req, res) => {
 })
 // edit restaurant page
 app.post('/restaurants/:id/edit', (req, res) => {
-  res.send('edit a restaurant page')
+  Restaurant.findById(req.params.id)
+    .lean()
+    .exec((err, restaurant) => {
+      if (err) return console.error(err)
+      return res.render('edit', { restaurant: restaurant })
+    })
 })
 // edit restaurant
 app.post('/restaurants/:id/edit', (req, res) => {
-  res.send('edit a restaurant')
+  Restaurant.findById(req.params.id, (err, restaurant) => {
+    if (err) return console.error(err)
+    restaurant.name = req.body.name
+    restaurant.name_en = req.body.name_en
+    restaurant.category = req.body.category
+    restaurant.image = req.body.image
+    restaurant.location = req.body.location
+    restaurant.phone = req.body.phone
+    restaurant.google_map = req.body.google_map
+    restaurant.rating = req.body.rating
+    restaurant.description = req.body.description
+    restaurant.save(err => {
+      if (err) return console.error(err)
+      return res.redirect(`/restaurants/${req.params.id}`)
+    })
+  })
 })
 // delete restaurant
 // edit restaurant page
