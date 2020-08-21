@@ -54,7 +54,12 @@ app.get('/restaurants/new', (req, res) => {
 })
 // get detail of a restaurant
 app.get('/restaurants/:id', (req, res) => {
-  res.send('get detail of a restaurant')
+  Restaurant.findById(req.params.id)
+    .lean()
+    .exec((err, restaurant) => {
+      if (err) return console.error(err)
+      return res.render('show', { restaurant: restaurant})
+    })
 })
 // create a restaurant
 app.post('/restaurants', (req, res) => {
